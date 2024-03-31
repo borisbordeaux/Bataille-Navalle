@@ -7,6 +7,7 @@ package com.boris.bataillenavale.modele;
 
 /**
  * enumeration indiquant le gagnant
+ *
  * @author boris
  */
 public enum Gagnant {

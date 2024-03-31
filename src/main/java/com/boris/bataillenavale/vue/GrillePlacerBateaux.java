@@ -161,10 +161,9 @@ public class GrillePlacerBateaux extends Parent implements Observateur {
 
         stackButtonAutoSet.setTranslateX(50);
         stackButtonAutoSet.setTranslateY(750);
-        
+
         stackButtonChangeDirection.setTranslateX(50);
         stackButtonChangeDirection.setTranslateY(810);
-
 
         //on cree un petit paneau d'information
         panelInfo = new Rectangle();
