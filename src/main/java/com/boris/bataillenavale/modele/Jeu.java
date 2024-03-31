@@ -3,28 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.boris.modele;
+package com.boris.bataillenavale.modele;
 
 import java.util.Random;
 
 /**
+ * Le jeu, c'est la que l'on va agencer toutes les cases et derouler la partie
  *
  * @author boris
  */
 public class Jeu {
 
-    /**
-     * les 2 premieres dimension pour le plateau et la derniere pour savoir de
-     * quel joueur il s'agit (0: joueur ; 1 : IA)
-     */
+    //les 2 premieres dimension pour le plateau et la derniere pour savoir de
+    //quel joueur il s'agit (0: joueur ; 1 : IA)
     private Case cases[][][];
-    /**
-     * La premiere dimension pour les bateaux et la deuxieme pour savoir de quel
-     * joueur il s'agit (0: joueur ; 1 : IA)
-     */
+
+    //La premiere dimension pour les bateaux et la deuxieme pour savoir de quel
+    //joueur il s'agit (0: joueur ; 1 : IA)
     private Bateau bateaux[][];
-    
+
+    //le gagnant
     private Gagnant gagnant;
+
+    //indique si le joueur a place ses bateau
+    private boolean bateauxJoueurPlaces;
+
+    //indique le nombre de bateaux que l'utilisateur a place
+    private int nbBateauxJoueursPlaces;
 
     /**
      * initialise le jeu
@@ -33,6 +38,8 @@ public class Jeu {
         cases = new Case[10][10][2];
         bateaux = new Bateau[5][2];
         gagnant = Gagnant.PERSONNE;
+        bateauxJoueurPlaces = false;
+        nbBateauxJoueursPlaces = 0;
 
         for (int i = 0; i < 2; i++) {
             bateaux[0][i] = new Bateau("Porte-Avion", 5);
@@ -50,8 +57,17 @@ public class Jeu {
             }
         }
 
+        //on place les bateau de l'ia
+        placerBateau(true);
     }
 
+    /**
+     * permet de tirer sur une case
+     *
+     * @param x la coordonnee x de la case
+     * @param y la coordonnee y de la case
+     * @param forIA si true, fait tirer l'IA
+     */
     public void tirerSurCase(int x, int y, boolean forIA) {
         if (gagnant == Gagnant.PERSONNE) {
             cases[x][y][forIA ? 0 : 1].tirer();
@@ -59,12 +75,21 @@ public class Jeu {
         }
     }
 
+    /**
+     * permet de recuperer une case du jeu
+     *
+     * @param x la coordonnee x de la case
+     * @param y la coordonnee y de la case
+     * @param forIA si true, renvoie une case de l'ia, sinon renvoie une case du
+     * joueur
+     * @return un objet Case
+     */
     public Case getCaseAt(int x, int y, boolean forIA) {
         return cases[x][y][forIA ? 1 : 0];
     }
 
     /**
-     * place les bateaux de l'IA aléatoirement
+     * place les bateaux aléatoirement
      *
      * @param forIA indique si on veut placer les bateaux pour l'ia, sinon c'est
      * que c'est pour le joueur
@@ -72,18 +97,16 @@ public class Jeu {
     public void placerBateau(boolean forIA) {
 
         int joueur = forIA ? 1 : 0;
-
-        System.out.println("debut placement bateau " + (forIA ? "IA" : "Joueur"));
+        if (!forIA) {
+            bateauxJoueurPlaces = true;
+        }
 
         //pour chaque bateau
         for (int i = 0; i < 5; i++) {
-            System.out.println("bateau numero " + i + " " + bateaux[i][joueur]);
             //generateur aleatoire
             Random r = new Random();
             //vertical ou horizontal
             boolean vertical = r.nextBoolean();
-
-            //System.out.println("vertical ? " + vertical);
             //si vertical
             if (vertical) {
                 //on recupere des coordonnees aleatoires
@@ -91,7 +114,6 @@ public class Jeu {
                 int x = r.nextInt(10 - 1);
                 int y = r.nextInt(10 - bateaux[i][joueur].getNbCase());
 
-                //System.out.println("estimé en x = " + x + " y = " + y);
                 //on doit faire des verifications et ajuster en cas
                 //de probleme : on ne peut pas mettre un bateau sur un autre
                 //on commence par ajuster la coordonnee en x
@@ -108,16 +130,13 @@ public class Jeu {
                     if (xIncorrect) {
                         tempX++;
                         tempX %= 10;
-                        //System.out.println("on augmente le x pour le bateau numero "+i);
                         if (tempX == x) {
-                            //System.out.println("on augmente le y");
                             y++;
                             y %= 10;
                         }
                     }
                 } while (xIncorrect);
                 x = tempX;
-                System.out.println("placé en x = " + x + " y = " + y);
 
                 for (int j = 0; j < bateaux[i][joueur].getNbCase(); j++) {
                     bateaux[i][joueur].ajouterCase(cases[x][y + j][joueur]);
@@ -126,7 +145,6 @@ public class Jeu {
                 int x = r.nextInt(10 - bateaux[i][joueur].getNbCase());
                 int y = r.nextInt(10 - 1);
 
-                //System.out.println("estimé en x = " + x + " y = " + y);
                 //on doit faire des verifications et ajuster en cas
                 //de probleme : on ne peut pas mettre un bateau sur un autre
                 //on commence par ajuster la coordonnee en y
@@ -143,16 +161,13 @@ public class Jeu {
                     if (yIncorrect) {
                         tempY++;
                         tempY %= 10;
-                        //System.out.println("on augmente le y pour le bateau numero "+i);
                         if (tempY == y) {
-                            //System.out.println("on augmente le x");
                             x++;
                             x %= 10;
                         }
                     }
                 } while (yIncorrect);
                 y = tempY;
-                //System.out.println("placé en x = " + x + " y = " + y);
 
                 for (int j = 0; j < bateaux[i][joueur].getNbCase(); j++) {
                     bateaux[i][joueur].ajouterCase(cases[x + j][y][joueur]);
@@ -162,6 +177,9 @@ public class Jeu {
         }
     }
 
+    /**
+     * permet de savoir s'il y a un gagnant
+     */
     private void controleGagnant() {
         int perdant = -1;
         for (int i = 0; i < 2; i++) {
@@ -177,19 +195,25 @@ public class Jeu {
         }
 
         if (perdant == 0) {
-            System.out.println("L'IA a gagné !");
             gagnant = Gagnant.IA;
         }
         if (perdant == 1) {
-            System.out.println("Vous avez gagné !");
             gagnant = Gagnant.JOUEUR;
         }
     }
 
+    /**
+     * indique le gagnant
+     *
+     * @return le gagnant de la partie
+     */
     public Gagnant getGagnant() {
         return gagnant;
     }
 
+    /**
+     * reinitialise la partie
+     */
     public void resetPartie() {
         gagnant = Gagnant.PERSONNE;
         for (int i = 0; i < 2; i++) {
@@ -204,9 +228,13 @@ public class Jeu {
                 }
             }
         }
-        
+
+        nbBateauxJoueursPlaces = 0;
+        this.bateauxJoueurPlaces = false;
+        //place les bateaux de l'ia
         placerBateau(true);
-        placerBateau(false);
+
+        //affiche les grilles du jeu
         System.out.println(this);
     }
 
@@ -231,6 +259,85 @@ public class Jeu {
         }
 
         return res;
+    }
+
+    /**
+     * indique si on peut placer un bateau
+     *
+     * @param x la coordonnee x de la premiere case du bateau
+     * @param y la coordonnee y de la premiere case du bateau
+     * @param tailleBateau la taille du bateau
+     * @param horizontal l'orientation du bateau
+     * @return vrai si on peut placer le bateau
+     */
+    public boolean peutPlacerBateauJoueur(int x, int y, int tailleBateau, boolean horizontal) {
+        boolean res = true;
+        if (horizontal) {
+            if (x + tailleBateau <= 10) {
+                for (int i = x; i < x + tailleBateau; i++) {
+                    if (cases[i][y][0].contientBateau()) {
+                        res = false;
+                    }
+                }
+            } else {
+                res = false;
+            }
+        } else {
+            if (y + tailleBateau <= 10) {
+                for (int i = y; i < y + tailleBateau; i++) {
+                    if (cases[x][i][0].contientBateau()) {
+                        res = false;
+                    }
+                }
+            } else {
+                res = false;
+            }
+        }
+        return res;
+    }
+
+    /**
+     * permet de placer le bateau du joueur
+     *
+     * @param x la coordonnee x de la premiere case du bateau
+     * @param y la coordonnee y de la premiere case du bateau
+     * @param tailleBateau la taille du bateau
+     * @param horizontal l'orientation du bateau
+     */
+    public void placerBateauJoueur(int x, int y, int tailleBateau, boolean horizontal) {
+        if (peutPlacerBateauJoueur(x, y, tailleBateau, horizontal)) {
+            if (horizontal) {
+                for (int i = x; i < x + tailleBateau; i++) {
+                    cases[i][y][0].mettreBateau();
+                    bateaux[nbBateauxJoueursPlaces][0].ajouterCase(cases[i][y][0]);
+                }
+            } else {
+                for (int i = y; i < y + tailleBateau; i++) {
+                    cases[x][i][0].mettreBateau();
+                    bateaux[nbBateauxJoueursPlaces][0].ajouterCase(cases[x][i][0]);
+                }
+            }
+            nbBateauxJoueursPlaces++;
+            if (nbBateauxJoueursPlaces == 5) {
+                this.bateauxJoueurPlaces = true;
+            } else {
+                this.bateauxJoueurPlaces = false;
+            }
+        }
+    }
+
+    /**
+     * @return the bateauxJoueurPlaces
+     */
+    public boolean bateauxJoueurPlaces() {
+        return bateauxJoueurPlaces;
+    }
+
+    /**
+     * @return the nbBateauxJoueursPlaces
+     */
+    public int getNbBateauxJoueursPlaces() {
+        return nbBateauxJoueursPlaces;
     }
 
 }

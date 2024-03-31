@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.boris.vue;
+package com.boris.bataillenavale.modele.IA;
 
 /**
+ * enumeration du sens dans lequel l'IA doit tirer
  *
  * @author boris
  */
-public interface Observateur {
-    
-    public void miseAJour();
-    
+public enum Sens {
+    GAUCHE,
+    DROITE,
+    HAUT,
+    BAS,
+    AUCUN
 }

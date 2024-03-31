@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.boris.modele;
+package com.boris.bataillenavale.modele;
 
 /**
  * Represente un case du jeu, elle peut etre tirée ou non
@@ -11,16 +11,13 @@ package com.boris.modele;
  */
 public class Case {
     
-    /**
-     * indique si la case est tirée
-     */
+    //indique si la case est tirée
     private boolean tiree;
     
-    /**
-     * indique si la case contient un bateau
-     */
+    //indique si la case contient un bateau
     private boolean contientBateau;
     
+    //indique si la case contient un bateau coule
     private boolean contientBateauCoule;
     
     /**
@@ -63,14 +60,24 @@ public class Case {
         this.contientBateau = true;
     }
     
+    /**
+     * permet de savoir si la case contient un bateau coule
+     * @return true si c'est le cas
+     */
     public boolean contientBateauCoule(){
         return contientBateauCoule;
     }
     
+    /**
+     * permet d'indiquer que le bateau contient un bateau coule
+     */
     public void mettreBateauCoule(){
         contientBateauCoule = true;
     }
     
+    /**
+     * reinitialise la case
+     */
     public void reset(){
         this.tiree = false;
         this.contientBateau = false;

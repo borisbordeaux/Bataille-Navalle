@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.boris.vue;
+package com.boris.bataillenavale.vue;
 
-import com.boris.controleur.Controleur;
-import com.boris.modele.Case;
-import com.boris.modele.Gagnant;
-import com.boris.modele.Jeu;
+import com.boris.bataillenavale.controleur.Controleur;
+import com.boris.bataillenavale.modele.Case;
+import com.boris.bataillenavale.modele.Gagnant;
+import com.boris.bataillenavale.modele.Jeu;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.ImageCursor;
@@ -21,33 +21,57 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 /**
+ * Une case du jeu
  *
  * @author boris
  */
 public class Carre extends Parent implements Observateur {
 
+    //indique si on a deja clique dessus
     private boolean isChecked;
+    //le contour
     private Rectangle rect;
+    //les coordonnees de la case qu'elle represente
     private int valX;
     private int valY;
+    //le modele pour lire les donnees
     private Jeu modele;
+    //le controleur pour modifier les donnees
     private Controleur controleur;
+    //indique si c'est une case de l'IA ou du joueur
     private boolean isIA;
+    //les timelines d'animation
     private Timeline timelineFumee;
     private Timeline timelineFeu;
     private Timeline timelineSplash;
     private Timeline timelineExplosion;
+    //les images
     private ImageView imagesFumee[];
     private ImageView imagesFeu[];
     private ImageView imagesSplash[];
     private ImageView imagesExplosion[];
+    //le numero de l'image actuelle
+    //permet de se reperer et de faire les animations
     private int nbImageFumee = 0;
     private int nbImageFeu = 0;
     private int nbImagesSplash = 0;
     private int nbImagesExplosion = 0;
+    //indique si les animation ont deja eu lieu
+    //car on ne doit voir qu'une fois l'explosion
+    //et le "plouf"
     private boolean dejaExplose;
     private boolean dejaSplash;
 
+    /**
+     * le constructeur
+     *
+     * @param x la coordonnee en x de la case representee
+     * @param y la coordonnee en y de la case representee
+     * @param decalage le decalage pour deplacer la case au bon endroit
+     * @param jeu le modele
+     * @param c le controleur
+     * @param isIA true si c'est une case de l'IA, false sinon
+     */
     public Carre(int x, int y, int decalage, Jeu jeu, Controleur c, boolean isIA) {
 
         this.isIA = isIA;
@@ -58,6 +82,7 @@ public class Carre extends Parent implements Observateur {
         dejaExplose = false;
         dejaSplash = false;
 
+        //on cree un carre
         rect = new Rectangle();
         rect.setWidth(40);
         rect.setHeight(40);
@@ -66,13 +91,16 @@ public class Carre extends Parent implements Observateur {
         rect.setFill(Color.TRANSPARENT);
         rect.setStroke(Color.BLACK);
 
-        this.setTranslateX(x * 40 + 50);//on positionne le groupe plutôt que le rectangle
+        //on positionne le groupe plutôt que le rectangle
+        //c'est plus simple pour les animations
+        this.setTranslateX(x * 40 + 50);
         this.setTranslateY(y * 40 + decalage + 40);
         this.getChildren().add(rect);
 
+        //on cree les images et la timeline (on change d'image apres un certain temps)
         imagesFumee = new ImageView[24];
         for (int i = 0; i < 24; i++) {
-            imagesFumee[i] = new ImageView(new Image(this.getClass().getResourceAsStream("/com/boris/images/fumee/" + Integer.toString(i + 1) + ".png")));
+            imagesFumee[i] = new ImageView(new Image(getClass().getResourceAsStream("/images/fumee/" + Integer.toString(i + 1) + ".png")));
             this.getChildren().add(imagesFumee[i]);
             imagesFumee[i].setVisible(false);
             imagesFumee[i].setX(0);
@@ -89,7 +117,7 @@ public class Carre extends Parent implements Observateur {
 
         imagesFeu = new ImageView[6];
         for (int i = 0; i < 6; i++) {
-            imagesFeu[i] = new ImageView(new Image(this.getClass().getResourceAsStream("/com/boris/images/feu/" + Integer.toString(i + 1) + ".png")));
+            imagesFeu[i] = new ImageView(new Image(getClass().getResourceAsStream("/images/feu/" + Integer.toString(i + 1) + ".png")));
             this.getChildren().add(imagesFeu[i]);
             imagesFeu[i].setVisible(false);
             imagesFeu[i].setX(0);
@@ -105,13 +133,13 @@ public class Carre extends Parent implements Observateur {
         timelineFeu.setCycleCount(Timeline.INDEFINITE);
         if (isIA) {
             Image im[] = new Image[1];
-            im[0] = new Image(this.getClass().getResourceAsStream("/com/boris/images/viseur.png"));
+            im[0] = new Image(getClass().getResourceAsStream("/images/viseur.png"));
             setCursor(ImageCursor.chooseBestCursor(im, 15, 15));
         }
 
         imagesSplash = new ImageView[8];
         for (int i = 0; i < 8; i++) {
-            imagesSplash[i] = new ImageView(new Image(this.getClass().getResourceAsStream("/com/boris/images/splash/" + Integer.toString(i + 1) + ".png")));
+            imagesSplash[i] = new ImageView(new Image(getClass().getResourceAsStream("/images/splash/" + Integer.toString(i + 1) + ".png")));
             this.getChildren().add(imagesSplash[i]);
             imagesSplash[i].setVisible(false);
             imagesSplash[i].setX(0);
@@ -128,7 +156,7 @@ public class Carre extends Parent implements Observateur {
 
         imagesExplosion = new ImageView[16];
         for (int i = 0; i < 16; i++) {
-            imagesExplosion[i] = new ImageView(new Image(this.getClass().getResourceAsStream("/com/boris/images/explosion/" + Integer.toString(i + 1) + ".png")));
+            imagesExplosion[i] = new ImageView(new Image(getClass().getResourceAsStream("/images/explosion/" + Integer.toString(i + 1) + ".png")));
             this.getChildren().add(imagesExplosion[i]);
             imagesExplosion[i].setVisible(false);
             imagesExplosion[i].setX(0);
@@ -143,6 +171,7 @@ public class Carre extends Parent implements Observateur {
         timelineExplosion.getKeyFrames().add(keyExplosion);
         timelineExplosion.setCycleCount(16);
 
+        //on definit les differents evenement de la souris (clique et deplacement)
         this.setOnMousePressed((MouseEvent me) -> {
             if (!isChecked && isIA && jeu.getGagnant() == Gagnant.PERSONNE) {
                 clique();
@@ -162,11 +191,18 @@ public class Carre extends Parent implements Observateur {
         });
     }
 
+    /**
+     * indique qu'on a tire sur la case et utilise le controleur pour tirer sur
+     * une case
+     */
     public void clique() {
         isChecked = true;
         controleur.tirerCase(valX, valY, !isIA);
     }
 
+    /**
+     * reinitialise la case et les animations
+     */
     public void reset() {
         this.rect.setStroke(Color.BLACK);
         this.isChecked = false;
@@ -195,6 +231,9 @@ public class Carre extends Parent implements Observateur {
         }
     }
 
+    /**
+     * passe a l'image de fumee suivante
+     */
     private void majImageFumee() {
         imagesFumee[nbImageFumee].setVisible(false);
         nbImageFumee++;
@@ -204,6 +243,9 @@ public class Carre extends Parent implements Observateur {
         imagesFumee[nbImageFumee].setVisible(true);
     }
 
+    /**
+     * passe a l'image de feu suivante
+     */
     private void majImageFeu() {
         imagesFeu[nbImageFeu].setVisible(false);
         nbImageFeu++;
@@ -213,6 +255,9 @@ public class Carre extends Parent implements Observateur {
         imagesFeu[nbImageFeu].setVisible(true);
     }
 
+    /**
+     * a l'image du splash suivante
+     */
     private void majImageSplash() {
         if (nbImagesSplash != 0 && nbImagesSplash != 1 && nbImagesSplash != 8) {
             imagesSplash[nbImagesSplash - 1].setVisible(false);
@@ -237,6 +282,9 @@ public class Carre extends Parent implements Observateur {
         }
     }
 
+    /**
+     * a l'image de l'explosion suivante
+     */
     private void majImageExplosion() {
         if (nbImagesExplosion != 0 && nbImagesExplosion != 1 && nbImagesExplosion != 16) {
             imagesExplosion[nbImagesExplosion - 1].setVisible(false);
@@ -264,57 +312,64 @@ public class Carre extends Parent implements Observateur {
         }
     }
 
+    /**
+     * permet de changer l'affichage selon le modele
+     */
     @Override
     public void miseAJour() {
-        Case c = modele.getCaseAt(valX, valY, isIA);
 
-        if (c.estTiree() && c.contientBateau() && !dejaExplose) {
-            timelineExplosion.play();
-            dejaExplose = true;
-            //System.out.println("boom !");
-        }
-        if (c.estTiree() && !c.contientBateau() && !dejaSplash) {
-            timelineSplash.play();
-            dejaSplash = true;
-            //System.out.println("plouf !");
-        }
+        if (modele.bateauxJoueurPlaces()) {
+            this.setVisible(true);
+            Case c = modele.getCaseAt(valX, valY, isIA);
 
-        if (c.contientBateau() && c.estTiree() && !c.contientBateauCoule()) {
-            this.rect.setFill(Color.ORANGE);
-            if (timelineExplosion.getStatus() != Timeline.Status.RUNNING) {
-                timelineFeu.play();
+            if (c.estTiree() && c.contientBateau() && !dejaExplose) {
+                timelineExplosion.play();
+                dejaExplose = true;
             }
-        } else {
-            timelineFeu.stop();
-            for (int i = 0; i < 6; i++) {
-                imagesFeu[i].setVisible(false);
+            if (c.estTiree() && !c.contientBateau() && !dejaSplash) {
+                timelineSplash.play();
+                dejaSplash = true;
             }
-        }
-        if (c.contientBateau() && c.estTiree() && c.contientBateauCoule()) {
-            this.rect.setFill(Color.BLACK);
-            timelineFumee.play();
-        } else {
-            timelineFumee.stop();
-            for (int i = 0; i < 24; i++) {
-                imagesFumee[i].setVisible(false);
-            }
-        }
-        if (c.contientBateau() && !c.estTiree()) {
-            if (isIA) {
-                this.rect.setFill(Color.TRANSPARENT);
+
+            if (c.contientBateau() && c.estTiree() && !c.contientBateauCoule()) {
+                this.rect.setFill(Color.ORANGE);
+                if (timelineExplosion.getStatus() != Timeline.Status.RUNNING) {
+                    timelineFeu.play();
+                }
             } else {
-                this.rect.setFill(Color.GREEN);
+                timelineFeu.stop();
+                for (int i = 0; i < 6; i++) {
+                    imagesFeu[i].setVisible(false);
+                }
             }
-        }
-        if (!c.contientBateau() && c.estTiree()) {
-            this.rect.setFill(Color.BLUE);
-        }
-        if (!c.contientBateau() && !c.estTiree()) {
-            this.rect.setFill(Color.TRANSPARENT);
-        }
-        
-        if (modele.getGagnant() != Gagnant.PERSONNE) {
-            reset();
+            if (c.contientBateau() && c.estTiree() && c.contientBateauCoule()) {
+                this.rect.setFill(Color.BLACK);
+                timelineFumee.play();
+            } else {
+                timelineFumee.stop();
+                for (int i = 0; i < 24; i++) {
+                    imagesFumee[i].setVisible(false);
+                }
+            }
+            if (c.contientBateau() && !c.estTiree()) {
+                if (isIA) {
+                    this.rect.setFill(Color.TRANSPARENT);
+                } else {
+                    this.rect.setFill(Color.GREEN);
+                }
+            }
+            if (!c.contientBateau() && c.estTiree()) {
+                this.rect.setFill(Color.BLUE);
+            }
+            if (!c.contientBateau() && !c.estTiree()) {
+                this.rect.setFill(Color.TRANSPARENT);
+            }
+
+            if (modele.getGagnant() != Gagnant.PERSONNE) {
+                reset();
+            }
+        } else {
+            this.setVisible(false);
         }
     }
 

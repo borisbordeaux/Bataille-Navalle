@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.boris.modele;
+package com.boris.bataillenavale.modele;
 
 import java.util.ArrayList;
 
@@ -12,21 +12,20 @@ import java.util.ArrayList;
  * @author boris
  */
 public class Bateau {
-    /**
-     * le bateau est placé sur des cases
-     */
+    
+    //le bateau est placé sur des cases
     private final ArrayList<Case> cases;
-    /**
-     * le bateau a un nom
-     */
+    
+    //le bateau a un nom
     private final String nom;
-    /**
-     * il possede un nombre de case maxi
-     */
+    
+    //il possede un nombre de case maxi
     private final int nbCase;
+    
     /**
      * Le constructeur, il initialise le bateau
      * @param nom le nom du bateau
+     * @param nbCases le nombre de cases qu'il prend
      */
     public Bateau(String nom, int nbCases){
         this.cases = new ArrayList<Case>();
@@ -79,6 +78,10 @@ public class Bateau {
         return nbCase;
     }
     
+    /**
+     * retire les cases associees au bateau
+     * permet de recommencer une partie
+     */
     public void reset(){
         for (Case c : cases){
             c.reset();

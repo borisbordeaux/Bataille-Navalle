@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.boris.modele;
+package com.boris.bataillenavale.modele.IA;
 
 /**
+ * enumeration de la direction dans laquelle tire l'IA
  *
  * @author boris
  */
-public enum Gagnant {
-    
-    IA,
-    JOUEUR,
-    PERSONNE
+public enum Direction {
+    VERTICALE,
+    HORIZONTALE,
+    AUCUNE
 }
