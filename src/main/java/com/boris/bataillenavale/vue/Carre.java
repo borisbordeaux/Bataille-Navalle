@@ -134,7 +134,7 @@ public class Carre extends Parent implements Observateur {
         if (isIA) {
             Image im[] = new Image[1];
             im[0] = new Image(getClass().getResourceAsStream("/images/viseur.png"));
-            setCursor(ImageCursor.chooseBestCursor(im, 15, 15));
+            setCursor(ImageCursor.chooseBestCursor(im, 32, 32));
         }
 
         imagesSplash = new ImageView[8];
