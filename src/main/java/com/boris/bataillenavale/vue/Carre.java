@@ -11,6 +11,7 @@ import com.boris.bataillenavale.modele.Gagnant;
 import com.boris.bataillenavale.modele.Jeu;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -131,10 +132,9 @@ public class Carre extends Parent implements Observateur {
         });
         timelineFeu.getKeyFrames().add(keyFeu);
         timelineFeu.setCycleCount(Timeline.INDEFINITE);
+        
         if (isIA) {
-            Image im[] = new Image[1];
-            im[0] = new Image(getClass().getResourceAsStream("/images/viseur.png"));
-            setCursor(ImageCursor.chooseBestCursor(im, 32, 32));
+            setCursor(Cursor.CROSSHAIR);
         }
 
         imagesSplash = new ImageView[8];
