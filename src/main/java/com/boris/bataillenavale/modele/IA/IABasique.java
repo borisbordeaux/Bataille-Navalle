@@ -35,5 +35,4 @@ public class IABasique extends AbstractIA {
             y++;
         }
     }
-
 }

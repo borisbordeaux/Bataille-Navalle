@@ -6,7 +6,7 @@
 package com.boris.bataillenavale.modele;
 
 /**
- * Represente un case du jeu, elle peut etre tirée ou non
+ * Represente une case du jeu, elle peut être tirée ou non
  *
  * @author boris
  */

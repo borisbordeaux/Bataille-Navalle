@@ -9,6 +9,7 @@ import com.boris.bataillenavale.modele.Jeu;
 import com.boris.bataillenavale.modele.Case;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.AbstractMap.SimpleEntry;
 
 /**
  * une IA assez complexe qui joue comme un humain, elle se base sur les tirs
@@ -22,7 +23,7 @@ public class IAIntermediaire extends AbstractIA {
     private Direction direction;
     private Sens sens;
     //la liste des tirs qu'elle a faits
-    private ArrayList<Coordonnee> listeTirs;
+    private ArrayList<SimpleEntry<Integer, Integer>> listeTirs;
 
     /**
      * le constructeur
@@ -31,7 +32,6 @@ public class IAIntermediaire extends AbstractIA {
      */
     public IAIntermediaire(Jeu jeu) {
         super(jeu);
-        reset();
     }
 
     /**
@@ -54,17 +54,17 @@ public class IAIntermediaire extends AbstractIA {
         modele.tirerSurCase(x, y, true);
         Case c = modele.getCaseAt(x, y, false);
         if (c.contientBateau() && !c.contientBateauCoule() && c.estTiree()) {
-            listeTirs.add(new Coordonnee(x, y));
+            listeTirs.add(new SimpleEntry(x, y));
         }
 
         //on vide la liste des tirs s'il ont servi à couler un bateau
-        ArrayList<Coordonnee> listAEnlever = new ArrayList<Coordonnee>();
-        for (Coordonnee coord : listeTirs) {
-            if (modele.getCaseAt(coord.getX(), coord.getY(), false).contientBateauCoule()) {
+        ArrayList<SimpleEntry<Integer, Integer>> listAEnlever = new ArrayList<>();
+        for (SimpleEntry coord : listeTirs) {
+            if (modele.getCaseAt((int) coord.getKey(), (int) coord.getValue(), false).contientBateauCoule()) {
                 listAEnlever.add(coord);
             }
         }
-        for (Coordonnee coord : listAEnlever) {
+        for (SimpleEntry coord : listAEnlever) {
             listeTirs.remove(coord);
         }
 
@@ -94,8 +94,8 @@ public class IAIntermediaire extends AbstractIA {
     private boolean continuerDirection() {
         boolean res = false;
         //on se base sur le premier tir
-        x = listeTirs.get(0).getX();
-        y = listeTirs.get(0).getY();
+        x = listeTirs.get(0).getKey();
+        y = listeTirs.get(0).getValue();
 
         //on essaie de continuer le sens d'abord
         //en partant de la premiere case touchée et de maniere itérative
@@ -112,8 +112,8 @@ public class IAIntermediaire extends AbstractIA {
                 }
                 if (modele.getCaseAt(x, y, false).estTiree()) {
                     sens = Sens.DROITE;
-                    x = listeTirs.get(0).getX();
-                    y = listeTirs.get(0).getY();
+                    x = listeTirs.get(0).getKey();
+                    y = listeTirs.get(0).getValue();
                     if (x < 9) {
                         x++;
                         while (x < 9 && modele.getCaseAt(x, y, false).estTiree() && modele.getCaseAt(x, y, false).contientBateau() && !modele.getCaseAt(x, y, false).contientBateauCoule()) {
@@ -137,8 +137,8 @@ public class IAIntermediaire extends AbstractIA {
                     }
                 }
                 if (modele.getCaseAt(x, y, false).estTiree()) {
-                    x = listeTirs.get(0).getX();
-                    y = listeTirs.get(0).getY();
+                    x = listeTirs.get(0).getKey();
+                    y = listeTirs.get(0).getValue();
                     sens = Sens.GAUCHE;
                     if (x > 0) {
                         x--;
@@ -215,8 +215,8 @@ public class IAIntermediaire extends AbstractIA {
      */
     private void testGDHB() {
         //test tir autour de la premiere case tirée et mise en place de la direction et du sens
-        x = listeTirs.get(0).getX();
-        y = listeTirs.get(0).getY();
+        x = listeTirs.get(0).getKey();
+        y = listeTirs.get(0).getValue();
         if (!testGauche()) {
             if (!testDroite()) {
                 if (!testHaut()) {
@@ -316,7 +316,7 @@ public class IAIntermediaire extends AbstractIA {
         y = 0;
         direction = Direction.AUCUNE;
         sens = Sens.AUCUN;
-        listeTirs = new ArrayList<Coordonnee>();
+        listeTirs = new ArrayList<>();
     }
 
 }

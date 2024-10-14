@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author boris
  */
-public class Jeu {
+public final class Jeu {
 
     //les 2 premieres dimension pour le plateau et la derniere pour savoir de
     //quel joueur il s'agit (0: joueur ; 1 : IA)
@@ -95,16 +95,16 @@ public class Jeu {
      * que c'est pour le joueur
      */
     public void placerBateau(boolean forIA) {
-
         int joueur = forIA ? 1 : 0;
         if (!forIA) {
             bateauxJoueurPlaces = true;
         }
 
+        //generateur aleatoire
+        Random r = new Random();
+
         //pour chaque bateau
         for (int i = 0; i < 5; i++) {
-            //generateur aleatoire
-            Random r = new Random();
             //vertical ou horizontal
             boolean vertical = r.nextBoolean();
             //si vertical
@@ -173,7 +173,6 @@ public class Jeu {
                     bateaux[i][joueur].ajouterCase(cases[x + j][y][joueur]);
                 }
             }
-
         }
     }
 
@@ -181,7 +180,6 @@ public class Jeu {
      * permet de savoir s'il y a un gagnant
      */
     private void controleGagnant() {
-        int perdant = -1;
         for (int i = 0; i < 2; i++) {
             boolean estPerdant = true;
             for (int j = 0; j < 5; j++) {
@@ -190,15 +188,8 @@ public class Jeu {
                 }
             }
             if (estPerdant) {
-                perdant = i;
+                gagnant = i == 0 ? Gagnant.IA : Gagnant.JOUEUR;
             }
-        }
-
-        if (perdant == 0) {
-            gagnant = Gagnant.IA;
-        }
-        if (perdant == 1) {
-            gagnant = Gagnant.JOUEUR;
         }
     }
 
@@ -231,6 +222,7 @@ public class Jeu {
 
         nbBateauxJoueursPlaces = 0;
         this.bateauxJoueurPlaces = false;
+
         //place les bateaux de l'ia
         placerBateau(true);
 
@@ -339,5 +331,4 @@ public class Jeu {
     public int getNbBateauxJoueursPlaces() {
         return nbBateauxJoueursPlaces;
     }
-
 }

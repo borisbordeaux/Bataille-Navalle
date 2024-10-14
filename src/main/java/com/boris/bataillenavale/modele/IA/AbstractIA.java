@@ -12,14 +12,17 @@ import com.boris.bataillenavale.modele.Jeu;
  *
  * @author boris
  */
-public abstract class AbstractIA extends Coordonnee {
+public abstract class AbstractIA {
+
+    protected int x;
+    protected int y;
 
     //le modele
     protected Jeu modele;
 
     public AbstractIA(Jeu j) {
-        super(0, 0);
         modele = j;
+        reset();
     }
 
     /**
@@ -31,7 +34,8 @@ public abstract class AbstractIA extends Coordonnee {
      * reinitialise l'IA
      */
     public void reset() {
-        super.reset();
+        x = 0;
+        y = 0;
     }
 
 }

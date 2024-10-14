@@ -30,13 +30,14 @@ public class Bateau {
      * @param nbCases le nombre de cases qu'il prend
      */
     public Bateau(String nom, int nbCases) {
-        this.cases = new ArrayList<Case>();
+        this.cases = new ArrayList<>();
         this.nom = nom;
         this.nbCase = nbCases;
     }
 
     /**
-     * indique si le bateau est coule ou non
+     * indique si le bateau est coulé ou non, et met à jour les cases si le
+     * bateau est coulé
      *
      * @return vrai si le bateau ne contient que des cases tiree
      */
@@ -56,7 +57,7 @@ public class Bateau {
     }
 
     /**
-     * indique si le bateau est sur la case passee en parametre
+     * indique si le bateau est sur la case passée en parametre
      *
      * @param c la case dont on veut savoir si le bateau est dessus
      * @return vrai si le bateau est sur la case, faux sinon

@@ -19,7 +19,7 @@ public class App extends Application {
         root.getChildren().add(menu);
         Scene scene = new Scene(root, 500, 900);
 
-        stage.setTitle("Bataille Navale");
+        stage.setTitle("Bataille Navalle");
         stage.setScene(scene);
         stage.show();
     }
